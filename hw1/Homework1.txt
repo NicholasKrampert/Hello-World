@@ -1,0 +1,63 @@
+//includes
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+
+double avgNumPerSentence(char str[]) {
+  //Initialize Variables
+  char * sentence;
+  int countSentence = 0;
+  int i = 0;
+  double avgCount = 0;
+  double countWords = 0;
+
+  char* stuffSent[100];
+  sentence = strtok(str, "."); //break the string apart by periods
+
+  while(sentence != NULL) { //goes over all sentences
+    stuffSent[countSentence] = sentence; //put in the list of sentences
+    countSentence += 1;
+    sentence = strtok(NULL, ".");
+
+  }
+
+  while(i < countSentence) { //goes over list of all sentences
+    char* word = strtok(stuffSent[i], " "); //break the sentence into words
+
+    while(word != NULL) { //count the number of words per sentence
+      countWords += 1;
+      word = strtok(NULL, " ");
+    }
+
+    if(countWords > 0) { //comput the average
+      if(avgCount == 0) { //start condition
+        avgCount = countWords;
+        countWords = 0;
+      }
+      else { //add the new number of words per sentence to the running average and devide by 2
+        avgCount = avgCount + countWords;
+        avgCount = avgCount / 2;
+        countWords = 0;
+      }
+    }
+
+    i += 1; //go to next sentence
+  }
+
+  return avgCount; //return the average number of words per sentence
+}
+
+int main (int argc,char *args[]) {
+  //string to be passed into function
+  char str[] = "We hold these truths to be self-evident, that all men are created equal, that they are endowed, by their Creator, with certain unalienable Rights, that among these are Life, Liberty, and the pursuit of Happiness. That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed, That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or abolish it, and to institute new Government, laying its foundation on such principles, and organizing its powers in such form, as to them shall seem most likely to effect their Safety and Happiness. Prudence, indeed, will dictate that Governments long established should not be changed for light and transient causes; and accordingly all experience hath shewn, that mankind are more disposed to suffer, while evils are sufferable, than to right themselves by abolishing the forms to which they are accustomed. But when a long train of abuses and usurpations, pursuing invariably the same Object, evinces a design to reduce them under absolute Despotism, it is their right, it is their duty, to throw off such Government, and to provide new Guards for their future security.";
+
+  double numPerSentence = avgNumPerSentence(str);
+
+  printf("The average number of words per sentence %f.", numPerSentence);
+
+  return 0;
+}
+
+

@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include<sys/wait.h>
+#include<unistd.h>
+#include <string.h>
+
+//shell doing the commands
+int shell(char* command){
+
+  char* cd = strtok(command, " ");
+  char* arr[200] = {};
+
+  int i = 0;
+  while(cd != NULL){
+    arr[i] = cd;
+    i += 1;
+    cd = strtok(NULL, " ");
+  }
+
+  execvp(arr[0], arr);//execute the command
+  exit(1);
+}
+
+int main(void){
+  int child;
+
+  while(0 == 0){//infinite loop
+    char input[200] = {};
+    int childStatus = 0;
+
+    printf("\nEnter your command or 0 to quit\n");
+    scanf("%[^\n]%*c", input);//getting input from user
+
+    if(strcmp(input, "0") != 0){//testing to see if they want to quit
+
+      if((child = fork()) == 0){//making a child
+        shell(input);//call the shell to execute the command
+      }
+      else{
+        wait(&childStatus);
+        if(childStatus != 0){//if command did not work
+          printf("\nError, please try your command again.\n");
+        }
+      }
+    }
+    else{//input quit case
+      printf("Exiting program...\n");
+      return 0;
+    }
+  }
+  return 0;
+}
